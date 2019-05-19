@@ -1,8 +1,12 @@
+// Let A be an array representing the heights of adjacent buildings of unit
+// width. Design an algorithm to compute the area of the largest rectangle
+// contained in this skyline.
+
 package main
 
 import "fmt"
 
-const Verbose = true
+const Verbose = false
 
 func main() {
 	skyline := Skyline{1, 4, 2, 5, 6, 3, 2, 6, 6, 5, 2, 1, 3}
