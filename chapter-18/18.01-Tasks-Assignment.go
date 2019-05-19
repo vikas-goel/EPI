@@ -54,7 +54,11 @@ func Assignment (tasks []Task) [][]Task {
 }
 
 func main() {
-	tasks := []Task{5, 2, 1, 6, 4, 4}
-	fmt.Print("Tasks", tasks, " = Assignment")
-	fmt.Println(Assignment(tasks))
+	tasks1 := []Task{5, 2, 1, 6, 4, 4}
+	tasks2 := []Task{5, 2, 1, 6, 4, 3, 4}
+
+	for _, t := range [][]Task{tasks1, tasks2} {
+		fmt.Print("Tasks", t, " = Assignment")
+		fmt.Println(Assignment(t))
+	}
 }
