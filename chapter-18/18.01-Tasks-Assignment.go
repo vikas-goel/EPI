@@ -25,22 +25,29 @@ func Assignment (tasks []Task) [][]Task {
 	sortTasks(tasks)
 
 	numTasks := len(tasks)
-	numAssgn := (numTasks+1)/2
+
+	// For odd number of tasks, let the last task be lone assignment in
+	// the pair.
+	oddFactor := 0
+	if numTasks % 2 == 1 {
+		oddFactor = 1
+	}
+
+	numAssgn := (numTasks+oddFactor)/2
 	pair := make([][]Task, numAssgn)
 
 	// Pair the two extremes and keep moving in.
 	for i := 0; i < numTasks/2; i++ {
 		pair[i] = make([]Task, 2)
 		pair[i][0] = tasks[i]
-		pair[i][1] = tasks[numTasks-i-1]
+		pair[i][1] = tasks[numTasks-i-1-oddFactor]
 	}
 
-	// Error handling: if the number of given tasks is odd, then both tasks
-	// in the the last pair is same.
-	if numTasks % 2 == 1 {
-		pair[numAssgn-1] = make([]Task, 2)
-		pair[numAssgn-1][0] = tasks[numTasks/2]
-		pair[numAssgn-1][1] = pair[numAssgn-1][0]
+	// If the number of given tasks is odd, then the last assignment gets
+	// only the last task in the sorted one.
+	if oddFactor == 1 {
+		pair[numAssgn-1] = make([]Task, 1)
+		pair[numAssgn-1][0] = tasks[numTasks-1]
 	}
 
 	return pair
