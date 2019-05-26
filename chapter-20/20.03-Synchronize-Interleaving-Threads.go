@@ -10,9 +10,9 @@ import (
 )
 
 type EvenOdd struct {
+	printRange int
+	printTurnEven bool
 	wg sync.WaitGroup
-	printRange, exitCount int
-	turnEven bool
 	notifyExit, notifyDone, notifyEven, notifyOdd chan bool
 }
 
@@ -24,7 +24,7 @@ func NewEvenOdd(printRange int) *EvenOdd {
 	// Prepare channels for synchronization.
 	// Buffered channel to avoid sleeping-channels/deadlock.
 	this.notifyExit = make(chan bool, 1)
-	this.notifyDone = make(chan bool ,1)
+	this.notifyDone = make(chan bool, 1)
 	this.notifyEven = make(chan bool, 1)
 	this.notifyOdd = make(chan bool, 1)
 
@@ -45,24 +45,24 @@ func NewEvenOdd(printRange int) *EvenOdd {
 
 // Start execution with the desired channel first.
 func (this *EvenOdd) Print() {
-	this.turnEven = false
+	this.printTurnEven = false
 	this.notifyOdd <- true
 	this.wg.Wait()
 }
 
 // Handle even and odd printers.
 func (this *EvenOdd) printHandler() {
-	for this.exitCount < 2 {
+	for exitCount := 0; exitCount < 2; {
 		select {
 		case <- this.notifyExit:
-			this.exitCount++
+			exitCount++
 		case <- this.notifyDone:
 			// Send notifications only if both receivers are
 			// available.
-			if this.exitCount == 0 {
+			if exitCount == 0 {
 				// Alternate notifications to the channels.
-				this.turnEven = !this.turnEven
-				if this.turnEven {
+				this.printTurnEven = !this.printTurnEven
+				if this.printTurnEven {
 					this.notifyEven <- true
 				} else {
 					this.notifyOdd <- true
@@ -76,22 +76,6 @@ func (this *EvenOdd) printHandler() {
 	close(this.notifyDone)
 	close(this.notifyEven)
 	close(this.notifyOdd)
-}
-
-func (this *EvenOdd) waitEven() {
-	<-this.notifyEven
-}
-
-func (this *EvenOdd) waitOdd() {
-	<-this.notifyOdd
-}
-
-func (this *EvenOdd) notify() {
-	this.notifyDone <- true
-}
-
-func (this *EvenOdd) exiting() {
-	this.notifyExit <- true
 }
 
 func (this *EvenOdd) printEven() {
@@ -114,6 +98,22 @@ func (this *EvenOdd) printOdd() {
 			this.notify()
 		}
 	}()
+}
+
+func (this *EvenOdd) waitEven() {
+	<-this.notifyEven
+}
+
+func (this *EvenOdd) waitOdd() {
+	<-this.notifyOdd
+}
+
+func (this *EvenOdd) notify() {
+	this.notifyDone <- true
+}
+
+func (this *EvenOdd) exiting() {
+	this.notifyExit <- true
 }
 
 func main() {
