@@ -14,13 +14,13 @@ func PermuteArray(P []int, A []rune) bool {
 	// Swap the array elements as per the permutation input.
 	// Update the permutation indices to track the changes.
 	for i, L := 0, len(P); i < L-1; i++ {
-		if P[i] < 0 {
-			continue
+		next := i
+		for P[next] >= 0 {
+			A[i], A[P[next]] = A[P[next]], A[i]
+			temp := P[next]
+			P[next] -= L
+			next = temp
 		}
-
-		A[i], A[P[i]] = A[P[i]], A[i]
-		P[P[i]] -= L
-		P[i] -= L
 	}
 
 	fmt.Printf("%c\n", A)
@@ -30,4 +30,5 @@ func PermuteArray(P []int, A []rune) bool {
 func main() {
 	PermuteArray([]int{2, 0, 1, 3}, []rune{'a', 'b', 'c', 'd'})
 	PermuteArray([]int{3, 2, 1, 0}, []rune{'a', 'b', 'c', 'd'})
+	PermuteArray([]int{1, 0, 3, 4, 2}, []rune{'a', 'b', 'c', 'd', 'e'})
 }
