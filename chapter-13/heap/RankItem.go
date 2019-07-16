@@ -35,10 +35,6 @@ func (this *RankItemHeap) Pop() (item interface{}) {
 	return
 }
 
-func (this *RankItemHeap) Peek() (item *RankItem) {
-	return (*this)[0]
-}
-
 func NewRankItemHeap() *RankItemHeap {
 	var this RankItemHeap
 	this = make([]*RankItem, 0)

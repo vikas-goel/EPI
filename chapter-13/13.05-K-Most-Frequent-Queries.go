@@ -17,15 +17,11 @@ func kMostFrequentQueries(array []string, k int) []string {
 
 	kFrequent := myheap.NewRankItemHeap()
 	for str, cnt := range uniqueCount {
-		if kFrequent.Len() < k {
-			heapItem := myheap.RankItem{Value:str, Rank:cnt}
-			heap.Push(kFrequent, &heapItem)
-		} else {
-			item := kFrequent.Peek()
-			if cnt > item.Rank {
-				item.Value, item.Rank = str, cnt
-				heap.Fix(kFrequent, 0)
-			}
+		heapItem := myheap.RankItem{Value:str, Rank:cnt}
+		heap.Push(kFrequent, &heapItem)
+
+		if kFrequent.Len() > k {
+			heap.Pop(kFrequent)
 		}
 	}
 
