@@ -7,6 +7,8 @@ import "fmt"
 
 func ReverseBits(number uint64) (reverse uint64) {
 	for ; number != 0; number >>= 1 {
+		// For every left shift of the number, make a right shift
+		// for reverse.
 		reverse <<= 1
 
 		// If the last bit of the number is 1, then prepare
