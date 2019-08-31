@@ -12,44 +12,18 @@ func Rearrange(pivotIndex int, array []int) {
 		return
 	}
 
-	left, right := pivotIndex, pivotIndex
-	for i := 0; i < len(array); i++ {
-		if i >= left && i <= right {
-			continue
-		}
-
-		if array[i] > array[right] && i < right {
-			// Found a bigger element on the left side.
-			// Swap it with the right pivot position and shift the
-			// pivot range to one left.
-			array[i], array[right] = array[right], array[i]
-			left--
-			right--
-		} else if array[i] < array[left] && i > left {
-			// Found a smaller element on the right side.
-			// Swap it with the left pivot position and shift the
-			// pivot range to one right.
-			array[i], array[left] = array[left], array[i]
-			left++
-			right++
-		} else if array[i] == array[left] {
-			if i < left {
-				// Found an element same as the pivot on the
-				// left side. Move it before the left index
-				// and increase the pivot index range.
-				left--
-				array[i], array[left] = array[left], array[i]
-
-				// The i-th index has a new element that is
-				// not processed yet. So, adjust the index.
-				i--
-			} else {
-				// Found an element same as the pivot on the
-				// right side. Move it after the right index
-				// and increase the pivot index range.
-				right++
-				array[i], array[right] = array[right], array[i]
-			}
+	pivot := array[pivotIndex]
+	low, mid, high := 0, 0, len(array)-1
+	for mid <= high {
+		if array[mid] < pivot {
+			array[low], array[mid] = array[mid], array[low]
+			low++
+			mid++
+		} else if array[mid] == pivot {
+			mid++
+		} else { // if array[mid] > pivot
+			array[mid], array[high] = array[high], array[mid]
+			high--
 		}
 	}
 }
