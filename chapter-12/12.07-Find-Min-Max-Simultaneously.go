@@ -12,11 +12,11 @@ func MinMax(array []int) (min, max int) {
 	}
 
 	min, max = array[0], array[0]
-	for i := 1; i < len(array); i++ {
-		if array[i] < min {
-			min = array[i]
-		} else if array[i] > max {
-			max = array[i]
+	for _, elem := range array[1:] {
+		if elem < min {
+			min = elem
+		} else if elem > max {
+			max = elem
 		}
 	}
 
