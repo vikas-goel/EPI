@@ -31,10 +31,8 @@ func Find(array []int) (missing, duplicate int) {
 	xorNums = xorA ^ xorN
 
 	// Step 4
-	kBit, copyXorNums := 1, xorNums
-	for kBit = 1; copyXorNums & 1 == 0; kBit <<= 1 {
-		copyXorNums >>= 1
-	}
+	var kBit int
+	for kBit = 1; xorNums & kBit == 0; kBit <<= 1 {}
 
 	// Step 5
 	for i := 0; i < len(array); i++ {
