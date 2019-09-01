@@ -49,7 +49,7 @@ func Add(list1, list2 *List) *List {
 		}
 
 		tail.Next = &Node{Value: addValue}
-		tail = tail.Next
+		remaining, tail = remaining.Next, tail.Next
 	}
 
 	// Check whether carry forward is left.
@@ -61,7 +61,7 @@ func Add(list1, list2 *List) *List {
 }
 
 func main() {
-	list1, list2 := InitList(3, 1, 4), InitList(7, 0, 9)
+	list1, list2 := InitList(3, 1, 4), InitList(7, 0, 9, 9, 9)
 	sum := Add(list1, list2)
 	list1.Print()
 	fmt.Print("+")

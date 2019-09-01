@@ -18,7 +18,7 @@ func Reverse(list *List, start, finish int) {
 		return
 	}
 
-	for ; start > 2 && list.Next != nil; start-- {
+	for i := start; i > 2 && list.Next != nil; i-- {
 		list = list.Next
 	}
 
@@ -29,7 +29,7 @@ func Reverse(list *List, start, finish int) {
 
 	// Reverse start to finish pointers.
 	curr, next := list.Next, list.Next.Next
-	for finish -= start; finish > 1 && next != nil; finish-- {
+	for finish -= start; finish > 0 && next != nil; finish-- {
 		temp := next.Next
 		next.Next = curr
 		curr = next
@@ -48,7 +48,7 @@ func Reverse(list *List, start, finish int) {
 
 func main() {
 	list := InitList(1, 2, 3, 4, 5, 6, 7, 8, 9)
-	s, f := 3, 8
+	s, f := 4, 7
 
 	list.Print()
 	fmt.Printf("->Reverse[%v, %v]->", s, f)

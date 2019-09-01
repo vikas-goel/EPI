@@ -16,7 +16,7 @@ func Merge(list1, list2 *List) *List {
 	if list1 == nil {
 		return list2
 	} else if list2 == nil {
-		return list2
+		return list1
 	}
 
 	var head List
