@@ -80,7 +80,7 @@ func (this *StackMaxOpt) Max() (max int, ok bool) {
 		return
 	}
 
-	return this.data[this.maxLen-1], true
+	return this.data[this.max[this.maxLen-1]], true
 }
 
 func (this *StackMaxOpt) Peek() (data int, ok bool) {
@@ -128,11 +128,11 @@ func (this *StackMaxOpt) Push(data int) {
 	if insertMax {
 		if this.maxLen < len(this.max) {
 			this.max[this.maxLen] = this.size
-			this.maxLen++
 		} else {
 			this.max = append(this.max, this.size)
-			this.maxLen++
 		}
+
+		this.maxLen++
 	}
 
 	this.size++
