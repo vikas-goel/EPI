@@ -37,8 +37,15 @@ func NewEvenOdd(printRange int) *EvenOdd {
 	}()
 
 	// Start odd and even printers.
-	go this.printOdd()
-	go this.printEven()
+	go func() {
+		defer this.exiting()
+		this.printOdd()
+	}()
+
+	go func() {
+		defer this.exiting()
+		this.printEven()
+	}()
 
 	return this
 }
@@ -79,25 +86,19 @@ func (this *EvenOdd) printHandler() {
 }
 
 func (this *EvenOdd) printEven() {
-	go func() {
-		defer this.exiting()
-		for i := 2; i <= this.printRange; i += 2 {
-			this.waitEven()
-			fmt.Print(i, " ")
-			this.notify()
-		}
-	}()
+	for i := 2; i <= this.printRange; i += 2 {
+		this.waitEven()
+		fmt.Print(i, " ")
+		this.notify()
+	}
 }
 
 func (this *EvenOdd) printOdd() {
-	go func() {
-		defer this.exiting()
-		for i := 1; i <= this.printRange; i += 2 {
-			this.waitOdd()
-			fmt.Print(i, " ")
-			this.notify()
-		}
-	}()
+	for i := 1; i <= this.printRange; i += 2 {
+		this.waitOdd()
+		fmt.Print(i, " ")
+		this.notify()
+	}
 }
 
 func (this *EvenOdd) waitEven() {
