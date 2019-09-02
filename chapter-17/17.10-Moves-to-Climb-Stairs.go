@@ -8,16 +8,11 @@ import "fmt"
 
 func CountWays(n, k int) (numWays int) {
 	ways := make([]int, n+1)
+	ways[0] = 1
 
 	for level := 1; level <= n; level++ {
-		// The additional way is due to direct jump to the level
-		// if it is less than or equal to k steps.
-		if level <= k {
-			ways[level] = 1
-		}
-
-		// For 1..k steps from the level.
-		for step := 1; step < level && step <= k; step++ {
+		// For each level, check ways of using all the possible steps.
+		for step := 1; step <= level && step <= k; step++ {
 			ways[level] += ways[level-step]
 		}
 	}
