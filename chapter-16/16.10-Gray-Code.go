@@ -11,8 +11,8 @@ package main
 
 import "fmt"
 
-func GrayCode(num uint) (codes []int) {
-	if num <= 0 {
+func GrayCodeRecursive(num uint) (codes []int) {
+	if num == 0 {
 		return
 	} else if num == 1 {
 		codes = append(codes, 0, 1)
@@ -21,7 +21,7 @@ func GrayCode(num uint) (codes []int) {
 
 	// Compute gray code for the previous number and then prefix 1 to each
 	// code in the reverse order.
-	codes = GrayCode(num - 1)
+	codes = GrayCodeRecursive(num - 1)
 	for i := len(codes)-1; i >= 0 ; i-- {
 		newCode := codes[i] | (1 << (num - 1))
 		codes = append(codes, newCode)
@@ -30,6 +30,23 @@ func GrayCode(num uint) (codes []int) {
 	return
 }
 
+func GrayCodeIterative(num uint) (codes []int) {
+	if num == 0 {
+		return
+	}
+
+	codes = append(codes, 0, 1)
+	for i := uint(1); i < num; i++ {
+		for j := len(codes)-1; j >= 0 ; j-- {
+			newCode := codes[j] | (1 << i)
+			codes = append(codes, newCode)
+		}
+	}
+
+	return
+}
+
 func main() {
-	fmt.Printf("%03b\n", GrayCode(3))
+	fmt.Printf("%03b\n", GrayCodeRecursive(3))
+	fmt.Printf("%03b\n", GrayCodeIterative(3))
 }
