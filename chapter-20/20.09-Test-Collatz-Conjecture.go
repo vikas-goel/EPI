@@ -12,14 +12,20 @@ import (
 
 type CollatzChecker struct {
 	number, cores int
-	cache map[int]bool
 	server chan int
 	wg sync.WaitGroup
+
+	// Maps are not safe for concurrent use. So, synchronization needed
+	// when reading and writing for concurrent access.
+	safecache struct {
+		sync.RWMutex
+		m map[int]bool
+	}
 }
 
 func (this *CollatzChecker) init() {
-	this.cache = make(map[int]bool)
 	this.server = make(chan int, this.number)
+	this.safecache.m = make(map[int]bool)
 
 	for i := 0; i < this.cores; i++ {
 		this.wg.Add(1)
@@ -42,33 +48,28 @@ func (this *CollatzChecker) compute(number int, computing map[int]bool) bool {
 		return true
 	}
 
-	// Maps are not safe for concurrent use. So, synchronization needed
-	// when reading and writing for concurrent access.
-	var safecache = struct {
-		sync.RWMutex
-		m map[int]bool
-	}{m: this.cache}
-
-	safecache.RLock()
-	valid, computed := safecache.m[number]
-	safecache.RUnlock()
+	this.safecache.RLock()
+	valid, computed := this.safecache.m[number]
+	this.safecache.RUnlock()
 
 	if computed { // Already computed
 		return valid
 	}
 
-	valid := false
+	valid = false
 	if computing[number] { // Loop
 		valid = false
 	} else if number & 1 == 1 { // Odd
+		computing[number] = true
 		valid = this.compute(number*3+1, computing)
 	} else { // Even
+		computing[number] = true
 		valid = this.compute(number >> 1, computing)
 	}
 
-	safecache.Lock()
-	safecache.m[number] = valid
-	safecache.Unlock()
+	this.safecache.Lock()
+	this.safecache.m[number] = valid
+	this.safecache.Unlock()
 
 	return valid
 }
@@ -85,7 +86,7 @@ func (this *CollatzChecker) Check() {
 }
 
 func (this *CollatzChecker) Print() {
-	fmt.Println(this.cache)
+	fmt.Println(this.safecache.m)
 }
 
 func NewCollatzChecker(number, cores int) *CollatzChecker {
